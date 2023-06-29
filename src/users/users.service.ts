@@ -53,4 +53,16 @@ export class UsersService {
       console.log(err);
     }
   }
+
+  async getUsersByEmail(email: string) {
+    try {
+      const user = await this.userRepository.findOne({
+        where: { email },
+        include: { all: true },
+      });
+      return user;
+    } catch (err) {
+      console.log(err);
+    }
+  }
 }
