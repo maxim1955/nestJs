@@ -9,21 +9,21 @@ import { User } from './users.model';
 export class UsersController {
   constructor(private userService: UsersService) {}
 
-  @ApiOperation({ summary: 'Create a new user' })
+  @ApiOperation({ summary: 'Создание нового пользователя' })
   @ApiResponse({ status: 200, type: User })
   @Post()
   create(@Body() userDto: CreateUserDto) {
     return this.userService.createUser(userDto);
   }
 
-  @ApiOperation({ summary: 'Get all users' })
+  @ApiOperation({ summary: 'Получение всех пользователей' })
   @ApiResponse({ status: 200, type: [User] })
   @Get()
   getAll() {
     return this.userService.getAll();
   }
 
-  @ApiOperation({ summary: 'remove user' })
+  @ApiOperation({ summary: 'Удалять пользователей' })
   @ApiResponse({ status: 200, type: User })
   @Delete()
   deleteUser() {

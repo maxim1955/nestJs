@@ -1,36 +1,45 @@
-import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
-import { CreateUserDto } from "../users/dto/create-user.dto";
-import { UsersService } from "../users/users.service";
-import { JwtService } from "@nestjs/jwt";
-import * as bcrypt from "bcrypt";
-import { User } from "../users/users.model";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { CreateUserDto } from '../users/dto/create-user.dto';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '@nestjs/jwt';
+import * as bcrypt from 'bcrypt';
+import { User } from '../users/users.model';
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
-    private jwtService: JwtService
-  ) {
-  }
+    private jwtService: JwtService,
+  ) {}
 
   async login(userDto: CreateUserDto) {
-    console.log(userDto);
-    const user = await this.validateUser(userDto);
-    return this.generateToken(user);
+    try {
+      const user = await this.validateUser(userDto);
+      return this.generateToken(user);
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   private async generateToken(user: User) {
-    console.log(user);
-    const payLoad = {
-      id: user.id,
-      firstName: user.first_name,
-      email: user.email,
-      password: user.password
-    };
-    console.log(`payload: ${payLoad}`);
-    return {
-      token: this.jwtService.sign(payLoad)
-    };
+    try {
+      const payLoad = {
+        id: user.id,
+        firstName: user.first_name,
+        email: user.email,
+        password: user.password,
+      };
+      return {
+        token: this.jwtService.sign(payLoad),
+      };
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async registration(userDto: CreateUserDto) {
@@ -38,15 +47,16 @@ export class AuthService {
       const candidate = await this.userService.getUsersByEmail(userDto.email);
       if (candidate) {
         throw new HttpException(
-          `Пользователь с email -  + был зарегистрирован`,
-          HttpStatus.BAD_REQUEST
+          `Пользователь с email ${userDto.email} - был зарегистрирован`,
+          HttpStatus.BAD_REQUEST,
         );
       }
       const hashPass = await bcrypt.hash(userDto.password, 5);
       const user = await this.userService.createUser({
         ...userDto,
-        password: hashPass
+        password: hashPass,
       });
+      console.log(`USER ${user}`);
       return this.generateToken(user);
     } catch (err) {
       console.log(err);
@@ -58,12 +68,12 @@ export class AuthService {
       const user = await this.userService.getUsersByEmail(userDto.email);
       const hashPassword = await bcrypt.compare(
         userDto.password,
-        user.password
+        user.password,
       );
       if (user && hashPassword) {
         return user;
       }
-      throw new UnauthorizedException({ message: "Invalid password" });
+      throw new UnauthorizedException({ message: 'Invalid password' });
     } catch (err) {
       console.log(err);
     }
