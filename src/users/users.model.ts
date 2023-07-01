@@ -27,7 +27,7 @@ export class User extends Model<User, UserCreationAttrs> {
 
   @ApiProperty({ example: '19.05.1999', description: 'Birthday day' })
   @Column({ type: DataType.DATE, allowNull: true })
-  bithday: number;
+  birthday: number;
 
   @ApiProperty({ example: '89999999999', description: 'User PhoneNumber' })
   @Column({ type: DataType.STRING, allowNull: true })

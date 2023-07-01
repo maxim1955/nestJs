@@ -1,28 +1,24 @@
-import {
-  HttpException,
-  HttpStatus,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UsersService } from '../users/users.service';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { User } from '../users/users.model';
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { UsersService } from "../users/users.service";
+import { JwtService } from "@nestjs/jwt";
+import * as bcrypt from "bcrypt";
+import { User } from "../users/users.model";
 
 @Injectable()
 export class AuthService {
   constructor(
     private userService: UsersService,
-    private jwtService: JwtService,
-  ) {}
+    private jwtService: JwtService
+  ) {
+  }
 
   async login(userDto: CreateUserDto) {
     try {
       const user = await this.validateUser(userDto);
       return this.generateToken(user);
     } catch (err) {
-      console.error(err);
+      return err;
     }
   }
 
@@ -32,10 +28,10 @@ export class AuthService {
         id: user.id,
         firstName: user.first_name,
         email: user.email,
-        password: user.password,
+        password: user.password
       };
       return {
-        token: this.jwtService.sign(payLoad),
+        token: this.jwtService.sign(payLoad)
       };
     } catch (err) {
       console.log(err);
@@ -48,18 +44,17 @@ export class AuthService {
       if (candidate) {
         throw new HttpException(
           `Пользователь с email ${userDto.email} - был зарегистрирован`,
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.BAD_REQUEST
         );
       }
       const hashPass = await bcrypt.hash(userDto.password, 5);
       const user = await this.userService.createUser({
         ...userDto,
-        password: hashPass,
+        password: hashPass
       });
-      console.log(`USER ${user}`);
       return this.generateToken(user);
     } catch (err) {
-      console.log(err);
+      return err;
     }
   }
 
@@ -73,9 +68,8 @@ export class AuthService {
       if (user && hashPassword) {
         return user;
       }
-      throw new UnauthorizedException({ message: 'Invalid password' });
     } catch (err) {
-      console.log(err);
+      throw new UnauthorizedException({ message: "Invalid-password or email" });
     }
   }
 }

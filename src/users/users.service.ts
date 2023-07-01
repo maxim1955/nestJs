@@ -1,11 +1,12 @@
-import { Injectable } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
-import { User } from './users.model';
-import { CreateUserDto } from './dto/create-user.dto';
+import { Injectable } from "@nestjs/common";
+import { InjectModel } from "@nestjs/sequelize";
+import { User } from "./users.model";
+import { CreateUserDto } from "./dto/create-user.dto";
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User) private userRepository: typeof User) {}
+  constructor(@InjectModel(User) private userRepository: typeof User) {
+  }
 
   //Создание пользователя
   async createUser(dto: CreateUserDto) {
@@ -32,8 +33,8 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOne({
         where: {
-          first_name,
-        },
+          first_name
+        }
       });
       console.log(user);
     } catch (err) {
@@ -46,8 +47,8 @@ export class UsersService {
     try {
       const user = await this.userRepository.destroy({
         where: {
-          id,
-        },
+          id
+        }
       });
     } catch (err) {
       console.log(err);
@@ -58,11 +59,11 @@ export class UsersService {
     try {
       const user = await this.userRepository.findOne({
         where: { email },
-        include: { all: true },
+        include: { all: true }
       });
       return user;
     } catch (err) {
-      console.log(err);
+      throw err;
     }
   }
 }
