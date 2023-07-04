@@ -4,6 +4,7 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import * as process from 'process';
+import { FilesModule } from "../files/files.module";
 
 @Module({
   controllers: [AuthController],
@@ -16,6 +17,7 @@ import * as process from 'process';
         expiresIn: '24h',
       },
     }),
+    FilesModule
   ],
   exports: [AuthService, JwtModule],
 })

@@ -4,6 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 interface UserCreationAttrs {
   email: string;
   password: string;
+  file: string;
 }
 
 @Table({ tableName: 'users' })
@@ -22,7 +23,7 @@ export class User extends Model<User, UserCreationAttrs> {
   first_name: string;
 
   @ApiProperty({ example: 'Petrov', description: 'User Last Name' })
-  @Column({ type: DataType.STRING,defaultValue: 'example' })
+  @Column({ type: DataType.STRING, defaultValue: 'example' })
   last_name: string;
 
   @ApiProperty({ example: '19.05.1999', description: 'Birthday day' })
@@ -52,4 +53,8 @@ export class User extends Model<User, UserCreationAttrs> {
   @ApiProperty({ example: 'example', description: 'User first Name' })
   @Column({ type: DataType.INTEGER, allowNull: true })
   university_id: string;
+
+  @ApiProperty({ example: 'example', description: 'User first Name' })
+  @Column({ type: DataType.INTEGER, allowNull: true })
+  file: string;
 }

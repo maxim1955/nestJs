@@ -1,19 +1,21 @@
-import { ApiProperty } from "@nestjs/swagger";
-import * as Joi from "joi";
+import { ApiProperty } from '@nestjs/swagger';
+import * as Joi from 'joi';
 
 export class CreateUserDto {
-  @ApiProperty({ example: "Ivan", required: true })
+  @ApiProperty({ example: 'Ivan', required: true })
   readonly first_name: string;
-  @ApiProperty({ example: "Petrov", required: true })
+  @ApiProperty({ example: 'Petrov', required: true })
   readonly last_name: string;
-  @ApiProperty({ example: "Mail@mail.com", required: true })
+  @ApiProperty({ example: 'Mail@mail.com', required: true })
   readonly email: string;
-  @ApiProperty({ example: "2023-01-01", required: true })
+  @ApiProperty({ example: '2023-01-01', required: true })
   readonly birthday: string;
-  @ApiProperty({ example: "8123456789", required: false })
+  @ApiProperty({ example: '8123456789', required: false })
   readonly number: number;
-  @ApiProperty({ example: "123123123", required: true })
+  @ApiProperty({ example: '123123123', required: true })
   readonly password: string;
+  @ApiProperty({ example: 'adda.jpeg', required: false })
+  file: string;
 }
 
 export const CreateUserSchema = Joi.object({
@@ -22,5 +24,6 @@ export const CreateUserSchema = Joi.object({
   email: Joi.string().required(),
   birthday: Joi.string().required(),
   number: Joi.number().allow(null),
-  password: Joi.string().required().min(6)
+  password: Joi.string().required().min(6),
+  file: Joi.string(),
 });
